@@ -1,471 +1,433 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏆 League Arena Champion Tracker</title>
-  <meta name="description" content="Track your League of Legends Arena Champion challenge progress with this browser extension">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f1419 0%, #1e2328 100%);
-      color: #e6e6e6; 
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-    
-    .container { 
-      max-width: 1200px; 
-      margin: 0 auto; 
-      padding: 2rem;
-    }
-    
-    header { 
-      text-align: center; 
-      margin-bottom: 3rem;
-      padding: 2rem 0;
-    }
-    
-    h1 { 
-      color: #c9aa71; 
-      font-size: 3rem; 
-      margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-    
-    .subtitle { 
-      color: #9ca3af; 
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-    }
-    
-    .hero-section {
-      background: #1e2328;
-      border: 1px solid #3c3c41;
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 3rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-    
-    .download-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-    
-    .download-card {
-      background: #1e2328;
-      border: 1px solid #3c3c41;
-      border-radius: 12px;
-      padding: 2rem;
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .download-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 40px rgba(201, 170, 113, 0.2);
-      border-color: #c9aa71;
-    }
-    
-    .download-card h3 {
-      color: #c9aa71;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    
-    .download-btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #c9aa71, #f4e4bc);
-      color: #000;
-      text-decoration: none;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      margin: 1rem 0;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(201, 170, 113, 0.3);
-    }
-    
-    .download-btn:hover {
-      background: linear-gradient(135deg, #f4e4bc, #c9aa71);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(201, 170, 113, 0.4);
-    }
-    
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-    
-    .feature-card {
-      background: #1e2328;
-      border: 1px solid #3c3c41;
-      border-radius: 8px;
-      padding: 1.5rem;
-      text-align: center;
-    }
-    
-    .feature-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-    
-    .feature-card h4 {
-      color: #c9aa71;
-      margin-bottom: 0.5rem;
-    }
-    
-    .instructions {
-      background: #1e2328;
-      border: 1px solid #3c3c41;
-      border-radius: 12px;
-      padding: 2rem;
-      margin: 2rem 0;
-    }
-    
-    .instructions h3 {
-      color: #c9aa71;
-      margin-bottom: 1rem;
-    }
-    
-    .step {
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      background: #2a2a2a;
-      border-radius: 8px;
-      border-left: 4px solid #c9aa71;
-    }
-    
-    .step-number {
-      background: #c9aa71;
-      color: #000;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      margin-right: 1rem;
-      flex-shrink: 0;
-    }
-    
-    .step-content h4 {
-      color: #c9aa71;
-      margin-bottom: 0.5rem;
-    }
-    
-    .code {
-      background: #0f1419;
-      color: #c9aa71;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.9rem;
-    }
-    
-    .screenshot {
-      max-width: 100%;
-      border-radius: 8px;
-      margin: 1rem 0;
-      border: 1px solid #3c3c41;
-    }
-    
-    .warning {
-      background: #7f1d1d;
-      color: #fecaca;
-      border: 1px solid #ef4444;
-      border-radius: 8px;
-      padding: 1rem;
-      margin: 1rem 0;
-    }
-    
-    .warning h4 {
-      color: #fecaca;
-      margin-bottom: 0.5rem;
-    }
-    
-    .footer {
-      text-align: center;
-      margin-top: 3rem;
-      padding: 2rem;
-      border-top: 1px solid #3c3c41;
-      color: #9ca3af;
-    }
-    
-    @media (max-width: 768px) {
-      .container { padding: 1rem; }
-      h1 { font-size: 2rem; }
-      .download-section { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>🏆 League Arena Champion Tracker</h1>
-      <p class="subtitle">Track your League of Legends Arena Champion challenge progress with a simple browser extension</p>
-    </header>
-
-    <div class="hero-section">
-      <h2 style="color: #c9aa71; text-align: center; margin-bottom: 1rem;">Download the Extension</h2>
-      <p style="text-align: center; color: #9ca3af; margin-bottom: 2rem;">
-        A lightweight browser extension that connects directly to your League client to show your Arena Champion progress
-      </p>
-      
-      <div class="download-section">
-        <div class="download-card">
-          <h3>🚀 One-Click Install</h3>
-          <p>Install the extension directly in your browser - no manual setup required!</p>
-          <button onclick="installExtension()" class="download-btn" id="installBtn">
-            Install Extension
-          </button>
-          <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 1rem;">
-            Works with Chrome, Edge, Firefox, and other modern browsers
-          </p>
-        </div>
-        
-        <div class="download-card">
-          <h3>📦 Manual Download</h3>
-          <p>Download the extension files for manual installation</p>
-          <a href="league-arena-tracker-extension.zip" class="download-btn" download>
-            Download ZIP
-          </a>
-          <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 1rem;">
-            For advanced users or if auto-install fails
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <h4>Direct LCU Access</h4>
-        <p>Connects directly to your local League client - no servers needed</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <h4>Real-time Progress</h4>
-        <p>Shows live Arena Champion challenge progress with visual indicators</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">🖼️</div>
-        <h4>Champion Images</h4>
-        <p>Displays champion portraits from your local game data</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <h4>Secure & Private</h4>
-        <p>All data stays on your local machine - no external servers</p>
-      </div>
-    </div>
-
-    <div class="instructions" id="installation">
-      <h3>🚀 Installation Instructions</h3>
-      
-      <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h4>Download the Extension</h4>
-          <p>Click the "Download Extension" button above to get the extension files</p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h4>Extract the Files</h4>
-          <p>Extract the downloaded ZIP file to a folder on your computer</p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h4>Open Browser Extensions</h4>
-          <p><strong>Chrome/Edge:</strong> Navigate to <span class="code">chrome://extensions/</span><br>
-          <strong>Firefox:</strong> Navigate to <span class="code">about:debugging</span></p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h4>Enable Developer Mode</h4>
-          <p><strong>Chrome/Edge:</strong> Toggle "Developer mode" in the top right corner<br>
-          <strong>Firefox:</strong> Click "This Firefox" in the left sidebar</p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-number">5</div>
-        <div class="step-content">
-          <h4>Load the Extension</h4>
-          <p><strong>Chrome/Edge:</strong> Click "Load unpacked" and select the extension folder<br>
-          <strong>Firefox:</strong> Click "Load Temporary Add-on" and select the manifest.json file</p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-number">6</div>
-        <div class="step-content">
-          <h4>Start Using!</h4>
-          <p>Click the extension icon in your browser toolbar and upload your lockfile</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="instructions">
-      <h3>🎮 How to Use</h3>
-      
-      <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h4>Launch League of Legends</h4>
-          <p>Make sure your League client is running and you're logged in</p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h4>Click Extension Icon</h4>
-          <p>Click the League Arena Champion Tracker icon in your browser toolbar</p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h4>Upload Lockfile</h4>
-          <p>Click "Upload Lockfile" and select your lockfile from: <span class="code">C:\Riot Games\League of Legends\lockfile</span></p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h4>Load Challenge</h4>
-          <p>Click "Load Challenge" to see your Arena Champion progress with champion images!</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="warning">
-      <h4>⚠️ Important Notes</h4>
-      <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-        <li>League of Legends client must be running for the extension to work</li>
-        <li>The lockfile is automatically generated when League starts</li>
-        <li>All data processing happens locally - no external servers involved</li>
-        <li>Works with Chrome, Edge, Firefox, and other modern browsers</li>
-        <li>Firefox users need to reload the extension after each browser restart</li>
-      </ul>
-    </div>
-
-    <div class="footer">
-      <p>🏆 League Arena Champion Tracker - Track your progress, dominate the Arena!</p>
-      <p style="margin-top: 0.5rem; font-size: 0.9rem;">
-        Made for League of Legends players who want to track their Arena Champion challenge progress
-      </p>
-    </div>
-  </div>
-
-  <script>
-    function detectBrowser() {
-      const userAgent = navigator.userAgent.toLowerCase();
-      if (userAgent.includes('firefox')) {
-        return 'firefox';
-      } else if (userAgent.includes('chrome') || userAgent.includes('edge') || userAgent.includes('chromium')) {
-        return 'chromium';
-      } else {
-        return 'unknown';
-      }
-    }
-    
-    function installExtension() {
-      const installBtn = document.getElementById('installBtn');
-      const originalText = installBtn.textContent;
-      const browser = detectBrowser();
-      
-      installBtn.textContent = 'Installing...';
-      installBtn.disabled = true;
-      
-      // Create a temporary link to download the extension
-      const link = document.createElement('a');
-      link.href = 'league-arena-tracker-extension.zip';
-      link.download = 'league-arena-tracker-extension.zip';
-      link.click();
-      
-      // Show browser-specific instructions after download
-      setTimeout(() => {
-        installBtn.textContent = 'Installation Started!';
-        
-        let instructions = '';
-        if (browser === 'firefox') {
-          instructions = `Extension downloaded! Now follow these steps for Firefox:
-
-1. Open Firefox and go to about:debugging
-2. Click "This Firefox" in the left sidebar
-3. Click "Load Temporary Add-on"
-4. Select the manifest.json file from the extracted folder
-5. Click the extension icon and upload your lockfile!
-
-The extension will be installed and ready to use!`;
-        } else if (browser === 'chromium') {
-          instructions = `Extension downloaded! Now follow these steps for Chrome/Edge:
-
-1. Open Chrome/Edge and go to chrome://extensions/
-2. Enable "Developer mode" (toggle in top right)
-3. Click "Load unpacked"
-4. Select the extracted extension folder
-5. Click the extension icon and upload your lockfile!
-
-The extension will be installed and ready to use!`;
-        } else {
-          instructions = `Extension downloaded! Choose your browser:
-
-For Chrome/Edge:
-1. Go to chrome://extensions/
-2. Enable "Developer mode"
-3. Click "Load unpacked" and select the folder
-
-For Firefox:
-1. Go to about:debugging
-2. Click "This Firefox"
-3. Click "Load Temporary Add-on" and select manifest.json
-
-Then click the extension icon and upload your lockfile!`;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League Champion Data Viewer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            min-height: 100vh;
         }
         
-        alert(instructions);
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
         
-        installBtn.textContent = originalText;
-        installBtn.disabled = false;
-      }, 1000);
-    }
-    
-    // Check if extension is already installed
-    function checkIfInstalled() {
-      // This would check if the extension is already installed
-      // For now, we'll just show the install button
-    }
-    
-    // Run check on page load
-    document.addEventListener('DOMContentLoaded', checkIfInstalled);
-  </script>
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #c89b3c, #f0e6d2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .setup-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c89b3c;
+        }
+        
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        
+        .input-group {
+            margin: 15px 0;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 14px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #c89b3c, #f0e6d2);
+            color: #0f2027;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        .status.success { background: rgba(40, 167, 69, 0.3); border: 1px solid #28a745; }
+        .status.error { background: rgba(220, 53, 69, 0.3); border: 1px solid #dc3545; }
+        .status.info { background: rgba(23, 162, 184, 0.3); border: 1px solid #17a2b8; }
+        
+        .data-container {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .champion-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(200, 155, 60, 0.3);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #c89b3c;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 League Champion Data Viewer</h1>
+            <p>Access your ranked and challenge data directly from the League client</p>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Requirements:</strong> League of Legends client must be running for this to work!
+        </div>
+        
+        <div class="setup-section">
+            <h3>🔧 Setup Instructions</h3>
+            
+            <div class="step">
+                <strong>Step 1:</strong> Make sure League of Legends is running and you're logged in
+            </div>
+            
+            <div class="step">
+                <strong>Step 2:</strong> For Chrome users - you may need to allow insecure content:
+                <ul>
+                    <li>Click the shield icon in the address bar</li>
+                    <li>Allow insecure content for this site</li>
+                    <li>Refresh the page</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <strong>Step 3:</strong> Click "Auto-detect League Client" or manually enter connection details
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label for="port">LCU Port (leave empty for auto-detection):</label>
+            <input type="number" id="port" placeholder="e.g., 52753">
+        </div>
+        
+        <div class="input-group">
+            <label for="password">LCU Password (leave empty for auto-detection):</label>
+            <input type="password" id="password" placeholder="LCU API password">
+        </div>
+        
+        <div style="text-align: center;">
+            <button class="btn" onclick="autoDetectClient()">🔍 Auto-detect League Client</button>
+            <button class="btn" onclick="connectManually()">🔗 Connect Manually</button>
+            <button class="btn" onclick="getChampionData()" id="getDataBtn" disabled>📊 Get Champion Data</button>
+        </div>
+        
+        <div id="status"></div>
+        
+        <div id="dataContainer" class="data-container">
+            <h3>📈 Your Champion Performance</h3>
+            <div id="championData"></div>
+        </div>
+    </div>
+
+    <script>
+        let lcuPort = null;
+        let lcuPassword = null;
+        
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function showLoading(message = 'Loading...') {
+            const status = document.getElementById('status');
+            status.innerHTML = `
+                <div class="status info">
+                    <div class="spinner"></div>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+        
+        async function autoDetectClient() {
+            showLoading('Trying to detect League client...');
+            
+            // Try common ports where LCU usually runs
+            const commonPorts = [
+                2999, // Most common
+                // We'll try a few others that are commonly used
+                52000 + Math.floor(Math.random() * 1000)
+            ];
+            
+            for (const port of commonPorts) {
+                try {
+                    // Try to access the LCU API without auth first to see if it's running
+                    const response = await fetch(`https://127.0.0.1:${port}/lol-summoner/v1/current-summoner`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        }
+                    });
+                    
+                    if (response.status === 401) {
+                        // 401 means the port is correct but we need auth
+                        lcuPort = port;
+                        document.getElementById('port').value = port;
+                        showStatus(`✅ Found League client on port ${port}! Now we need the password from the lockfile.`, 'success');
+                        document.getElementById('getDataBtn').disabled = false;
+                        return;
+                    }
+                } catch (error) {
+                    // Continue to next port
+                    continue;
+                }
+            }
+            
+            showStatus('❌ Could not auto-detect League client. Please make sure League is running and try manual connection.', 'error');
+            provideLockfileInstructions();
+        }
+        
+        function provideLockfileInstructions() {
+            const status = document.getElementById('status');
+            status.innerHTML += `
+                <div class="setup-section" style="margin-top: 20px;">
+                    <h4>📁 How to find your League client details:</h4>
+                    <div class="step">
+                        <strong>Windows:</strong> Open Command Prompt and run:
+                        <div class="code-block">wmic PROCESS WHERE name='LeagueClientUx.exe' GET CommandLine</div>
+                        Look for <code>--app-port=XXXXX</code> and <code>--remoting-auth-token=XXXXXXX</code>
+                    </div>
+                    <div class="step">
+                        <strong>Or check the lockfile at:</strong>
+                        <div class="code-block">C:\\Riot Games\\League of Legends\\lockfile</div>
+                        Format: <code>LeagueClient:PID:PORT:PASSWORD:PROTOCOL</code>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function connectManually() {
+            const port = document.getElementById('port').value;
+            const password = document.getElementById('password').value;
+            
+            if (!port) {
+                showStatus('❌ Please enter the LCU port', 'error');
+                return;
+            }
+            
+            lcuPort = parseInt(port);
+            lcuPassword = password;
+            
+            showStatus('✅ Manual connection details set. You can now try to get champion data.', 'success');
+            document.getElementById('getDataBtn').disabled = false;
+        }
+        
+        async function getChampionData() {
+            if (!lcuPort) {
+                showStatus('❌ Please detect or manually set connection details first', 'error');
+                return;
+            }
+            
+            showLoading('Fetching your champion data...');
+            
+            try {
+                // Create basic auth header if we have password
+                const headers = {
+                    'Accept': 'application/json',
+                };
+                
+                if (lcuPassword) {
+                    headers['Authorization'] = `Basic ${btoa('riot:' + lcuPassword)}`;
+                }
+                
+                const baseUrl = `https://127.0.0.1:${lcuPort}`;
+                
+                // Try to get current summoner info first
+                const summonerResponse = await fetch(`${baseUrl}/lol-summoner/v1/current-summoner`, {
+                    headers,
+                    mode: 'cors'
+                });
+                
+                if (!summonerResponse.ok) {
+                    throw new Error(`HTTP ${summonerResponse.status}: ${summonerResponse.statusText}`);
+                }
+                
+                const summoner = await summonerResponse.json();
+                
+                // Get ranked stats
+                const rankedResponse = await fetch(`${baseUrl}/lol-ranked/v1/current-ranked-stats`, {
+                    headers,
+                    mode: 'cors'
+                });
+                
+                let rankedData = null;
+                if (rankedResponse.ok) {
+                    rankedData = await rankedResponse.json();
+                }
+                
+                // Get champion mastery
+                const masteryResponse = await fetch(`${baseUrl}/lol-collections/v1/inventories/champion-mastery`, {
+                    headers,
+                    mode: 'cors'
+                });
+                
+                let masteryData = null;
+                if (masteryResponse.ok) {
+                    masteryData = await masteryResponse.json();
+                }
+                
+                displayChampionData(summoner, rankedData, masteryData);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                
+                if (error.message.includes('Failed to fetch')) {
+                    showStatus(`❌ Connection failed. This might be due to CORS or HTTPS issues. Try:<br>
+                        • Make sure League client is running<br>
+                        • Allow insecure content in your browser<br>
+                        • Check if the port is correct`, 'error');
+                } else {
+                    showStatus(`❌ Error: ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        function displayChampionData(summoner, rankedData, masteryData) {
+            const container = document.getElementById('championData');
+            const dataContainer = document.getElementById('dataContainer');
+            
+            let html = `
+                <div class="champion-card">
+                    <h3>👤 Summoner Info</h3>
+                    <p><strong>Name:</strong> ${summoner.displayName}</p>
+                    <p><strong>Level:</strong> ${summoner.summonerLevel}</p>
+                    <p><strong>XP:</strong> ${summoner.xpSinceLastLevel}/${summoner.xpUntilNextLevel}</p>
+                </div>
+            `;
+            
+            if (rankedData && rankedData.queues) {
+                html += '<div class="champion-card"><h3>🏆 Ranked Stats</h3>';
+                rankedData.queues.forEach(queue => {
+                    if (queue.tier !== 'NONE') {
+                        html += `
+                            <div style="margin: 10px 0; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px;">
+                                <strong>${queue.queueType}:</strong> ${queue.tier} ${queue.division}<br>
+                                LP: ${queue.leaguePoints} | Wins: ${queue.wins} | Losses: ${queue.losses}
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+            }
+            
+            if (masteryData) {
+                html += '<div class="champion-card"><h3>⭐ Top Champion Masteries</h3>';
+                const topMasteries = Object.values(masteryData)
+                    .sort((a, b) => b.championPoints - a.championPoints)
+                    .slice(0, 5);
+                
+                topMasteries.forEach(mastery => {
+                    html += `
+                        <div style="margin: 5px 0; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 3px;">
+                            Champion ID ${mastery.championId}: Level ${mastery.championLevel} 
+                            (${mastery.championPoints.toLocaleString()} points)
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            container.innerHTML = html;
+            dataContainer.style.display = 'block';
+            showStatus('✅ Successfully loaded your champion data!', 'success');
+        }
+        
+        // Check if League might be running on page load
+        window.addEventListener('load', () => {
+            showStatus('🎮 Ready! Make sure League of Legends is running, then click "Auto-detect League Client"', 'info');
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏆 League Arena Champion Tracker</title>
+  <meta name="description" content="Track your League of Legends Arena Champion challenge progress with this browser extension">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f1419 0%, #1e2328 100%);
+      color: #e6e6e6; 
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 2rem;
+    }
+    
+    header { 
+      text-align: center; 
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+    }
+    
+    h1 { 
+      color: #c9aa71; 
+      font-size: 3rem; 
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .subtitle { 
+      color: #9ca3af; 
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .hero-section {
+      background: #1e2328;
+      border: 1px solid #3c3c41;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .download-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .download-card {
+      background: #1e2328;
+      border: 1px solid #3c3c41;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .download-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(201, 170, 113, 0.2);
+      border-color: #c9aa71;
+    }
+    
+    .download-card h3 {
+      color: #c9aa71;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .download-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #c9aa71, #f4e4bc);
+      color: #000;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 1rem 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(201, 170, 113, 0.3);
+    }
+    
+    .download-btn:hover {
+      background: linear-gradient(135deg, #f4e4bc, #c9aa71);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(201, 170, 113, 0.4);
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .feature-card {
+      background: #1e2328;
+      border: 1px solid #3c3c41;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-card h4 {
+      color: #c9aa71;
+      margin-bottom: 0.5rem;
+    }
+    
+    .instructions {
+      background: #1e2328;
+      border: 1px solid #3c3c41;
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .instructions h3 {
+      color: #c9aa71;
+      margin-bottom: 1rem;
+    }
+    
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #2a2a2a;
+      border-radius: 8px;
+      border-left: 4px solid #c9aa71;
+    }
+    
+    .step-number {
+      background: #c9aa71;
+      color: #000;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .step-content h4 {
+      color: #c9aa71;
+      margin-bottom: 0.5rem;
+    }
+    
+    .code {
+      background: #0f1419;
+      color: #c9aa71;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    
+    .screenshot {
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border: 1px solid #3c3c41;
+    }
+    
+    .warning {
+      background: #7f1d1d;
+      color: #fecaca;
+      border: 1px solid #ef4444;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .warning h4 {
+      color: #fecaca;
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 2rem;
+      border-top: 1px solid #3c3c41;
+      color: #9ca3af;
+    }
+    
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      h1 { font-size: 2rem; }
+      .download-section { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏆 League Arena Champion Tracker</h1>
+      <p class="subtitle">Track your League of Legends Arena Champion challenge progress with a simple browser extension</p>
+    </header>
+
+    <div class="hero-section">
+      <h2 style="color: #c9aa71; text-align: center; margin-bottom: 1rem;">Download the Extension</h2>
+      <p style="text-align: center; color: #9ca3af; margin-bottom: 2rem;">
+        A lightweight browser extension that connects directly to your League client to show your Arena Champion progress
+      </p>
+      
+      <div class="download-section">
+        <div class="download-card">
+          <h3>🚀 Quick Install</h3>
+          <p>Download and get guided installation instructions for your browser</p>
+          <button onclick="installExtension()" class="download-btn" id="installBtn">
+            Get Extension
+          </button>
+          <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 1rem;">
+            Works with Chrome, Edge, Firefox, and other modern browsers
+          </p>
+        </div>
+        
+        <div class="download-card">
+          <h3>📦 Manual Download</h3>
+          <p>Download the extension files for manual installation</p>
+          <a href="league-arena-tracker-extension.zip" class="download-btn" download>
+            Download ZIP
+          </a>
+          <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 1rem;">
+            For advanced users or if auto-install fails
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h4>Direct LCU Access</h4>
+        <p>Connects directly to your local League client - no servers needed</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h4>Real-time Progress</h4>
+        <p>Shows live Arena Champion challenge progress with visual indicators</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🖼️</div>
+        <h4>Champion Images</h4>
+        <p>Displays champion portraits from your local game data</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h4>Secure & Private</h4>
+        <p>All data stays on your local machine - no external servers</p>
+      </div>
+    </div>
+
+    <div class="instructions" id="installation">
+      <h3>🚀 Installation Instructions</h3>
+      
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Download the Extension</h4>
+          <p>Click the "Download Extension" button above to get the extension files</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Extract the Files</h4>
+          <p>Extract the downloaded ZIP file to a folder on your computer</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Open Browser Extensions</h4>
+          <p><strong>Chrome/Edge:</strong> Navigate to <span class="code">chrome://extensions/</span><br>
+          <strong>Firefox:</strong> Navigate to <span class="code">about:debugging</span></p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Enable Developer Mode</h4>
+          <p><strong>Chrome/Edge:</strong> Toggle "Developer mode" in the top right corner<br>
+          <strong>Firefox:</strong> Click "This Firefox" in the left sidebar</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <h4>Load the Extension</h4>
+          <p><strong>Chrome/Edge:</strong> Click "Load unpacked" and select the extension folder<br>
+          <strong>Firefox:</strong> Click "Load Temporary Add-on" and select the manifest.json file</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">6</div>
+        <div class="step-content">
+          <h4>Start Using!</h4>
+          <p>Click the extension icon in your browser toolbar and upload your lockfile</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h3>🎮 How to Use</h3>
+      
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Launch League of Legends</h4>
+          <p>Make sure your League client is running and you're logged in</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Click Extension Icon</h4>
+          <p>Click the League Arena Champion Tracker icon in your browser toolbar</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Upload Lockfile</h4>
+          <p>Click "Upload Lockfile" and select your lockfile from: <span class="code">C:\Riot Games\League of Legends\lockfile</span></p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Load Challenge</h4>
+          <p>Click "Load Challenge" to see your Arena Champion progress with champion images!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning">
+      <h4>⚠️ Important Notes</h4>
+      <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+        <li>League of Legends client must be running for the extension to work</li>
+        <li>The lockfile is automatically generated when League starts</li>
+        <li>All data processing happens locally - no external servers involved</li>
+        <li>Works with Chrome, Edge, Firefox, and other modern browsers</li>
+        <li>Firefox users need to reload the extension after each browser restart</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <p>🏆 League Arena Champion Tracker - Track your progress, dominate the Arena!</p>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+        Made for League of Legends players who want to track their Arena Champion challenge progress
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function detectBrowser() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      if (userAgent.includes('firefox')) {
+        return 'firefox';
+      } else if (userAgent.includes('chrome') || userAgent.includes('edge') || userAgent.includes('chromium')) {
+        return 'chromium';
+      } else {
+        return 'unknown';
+      }
+    }
+    
+    function installExtension() {
+      const installBtn = document.getElementById('installBtn');
+      const originalText = installBtn.textContent;
+      const browser = detectBrowser();
+      
+      installBtn.textContent = 'Installing...';
+      installBtn.disabled = true;
+      
+      // Create a temporary link to download the extension
+      const link = document.createElement('a');
+      link.href = 'league-arena-tracker-extension.zip';
+      link.download = 'league-arena-tracker-extension.zip';
+      link.click();
+      
+      // Show browser-specific instructions after download
+      setTimeout(() => {
+        installBtn.textContent = 'Download Complete!';
+        
+        let instructions = '';
+        if (browser === 'firefox') {
+          instructions = `Extension downloaded! Now follow these steps for Firefox:
+
+1. Extract the ZIP file to a folder
+2. Open Firefox and go to about:debugging
+3. Click "This Firefox" in the left sidebar
+4. Click "Load Temporary Add-on"
+5. Select the manifest.json file from the extracted folder
+6. Click the extension icon and upload your lockfile!
+
+The extension will be installed and ready to use!`;
+        } else if (browser === 'chromium') {
+          instructions = `Extension downloaded! Now follow these steps for Chrome/Edge:
+
+1. Extract the ZIP file to a folder
+2. Open Chrome/Edge and go to chrome://extensions/
+3. Enable "Developer mode" (toggle in top right)
+4. Click "Load unpacked"
+5. Select the extracted extension folder
+6. Click the extension icon and upload your lockfile!
+
+The extension will be installed and ready to use!`;
+        } else {
+          instructions = `Extension downloaded! Choose your browser:
+
+For Chrome/Edge:
+1. Extract the ZIP file
+2. Go to chrome://extensions/
+3. Enable "Developer mode"
+4. Click "Load unpacked" and select the folder
+
+For Firefox:
+1. Extract the ZIP file
+2. Go to about:debugging
+3. Click "This Firefox"
+4. Click "Load Temporary Add-on" and select manifest.json
+
+Then click the extension icon and upload your lockfile!`;
+        }
+        
+        alert(instructions);
+        
+        installBtn.textContent = originalText;
+        installBtn.disabled = false;
+      }, 1000);
+    }
+    
+    // Check if extension is already installed
+    function checkIfInstalled() {
+      // This would check if the extension is already installed
+      // For now, we'll just show the install button
+    }
+    
+    // Run check on page load
+    document.addEventListener('DOMContentLoaded', checkIfInstalled);
+  </script>
+</body>
+</html>
