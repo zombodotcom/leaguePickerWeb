@@ -1,0 +1,20 @@
+# GitHub Pages configuration
+title: "League Arena Champion Tracker"
+description: "Track your League of Legends Arena Champion challenge progress with a browser extension"
+baseurl: "/leaguePickerWeb"
+url: "https://yourusername.github.io"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Exclude files from processing
+exclude:
+  - oldserver/
+  - .github/
+  - README.md
+
+# Include files
+include:
+  - league-arena-tracker-extension.zip

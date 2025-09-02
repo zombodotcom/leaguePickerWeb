@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "League Arena Champion Tracker",
+  "version": "1.0",
+  "description": "Track your League of Legends Arena Champion challenge progress",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:*/*",
+    "https://127.0.0.1:*/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "League Arena Champion Tracker"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
