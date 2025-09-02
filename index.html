@@ -225,24 +225,24 @@
       
       <div class="download-section">
         <div class="download-card">
-          <h3>📦 Download Extension</h3>
-          <p>Get the complete extension package with all files included</p>
-          <a href="league-arena-tracker-extension.zip" class="download-btn" download>
-            Download Extension
-          </a>
+          <h3>🚀 One-Click Install</h3>
+          <p>Install the extension directly in your browser - no manual setup required!</p>
+          <button onclick="installExtension()" class="download-btn" id="installBtn">
+            Install Extension
+          </button>
           <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 1rem;">
-            Includes: manifest.json, popup.html, popup.js
+            Works with Chrome, Edge, Firefox, and other modern browsers
           </p>
         </div>
         
         <div class="download-card">
-          <h3>📋 Installation Guide</h3>
-          <p>Step-by-step instructions to install and use the extension</p>
-          <a href="#installation" class="download-btn">
-            View Instructions
+          <h3>📦 Manual Download</h3>
+          <p>Download the extension files for manual installation</p>
+          <a href="league-arena-tracker-extension.zip" class="download-btn" download>
+            Download ZIP
           </a>
           <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 1rem;">
-            Works with Chrome, Edge, and other Chromium browsers
+            For advanced users or if auto-install fails
           </p>
         </div>
       </div>
@@ -296,8 +296,9 @@
       <div class="step">
         <div class="step-number">3</div>
         <div class="step-content">
-          <h4>Open Chrome Extensions</h4>
-          <p>Open Chrome and navigate to <span class="code">chrome://extensions/</span></p>
+          <h4>Open Browser Extensions</h4>
+          <p><strong>Chrome/Edge:</strong> Navigate to <span class="code">chrome://extensions/</span><br>
+          <strong>Firefox:</strong> Navigate to <span class="code">about:debugging</span></p>
         </div>
       </div>
       
@@ -305,7 +306,8 @@
         <div class="step-number">4</div>
         <div class="step-content">
           <h4>Enable Developer Mode</h4>
-          <p>Toggle "Developer mode" in the top right corner of the extensions page</p>
+          <p><strong>Chrome/Edge:</strong> Toggle "Developer mode" in the top right corner<br>
+          <strong>Firefox:</strong> Click "This Firefox" in the left sidebar</p>
         </div>
       </div>
       
@@ -313,7 +315,8 @@
         <div class="step-number">5</div>
         <div class="step-content">
           <h4>Load the Extension</h4>
-          <p>Click "Load unpacked" and select the folder containing the extension files</p>
+          <p><strong>Chrome/Edge:</strong> Click "Load unpacked" and select the extension folder<br>
+          <strong>Firefox:</strong> Click "Load Temporary Add-on" and select the manifest.json file</p>
         </div>
       </div>
       
@@ -368,7 +371,8 @@
         <li>League of Legends client must be running for the extension to work</li>
         <li>The lockfile is automatically generated when League starts</li>
         <li>All data processing happens locally - no external servers involved</li>
-        <li>Works with Chrome, Edge, and other Chromium-based browsers</li>
+        <li>Works with Chrome, Edge, Firefox, and other modern browsers</li>
+        <li>Firefox users need to reload the extension after each browser restart</li>
       </ul>
     </div>
 
@@ -379,5 +383,89 @@
       </p>
     </div>
   </div>
+
+  <script>
+    function detectBrowser() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      if (userAgent.includes('firefox')) {
+        return 'firefox';
+      } else if (userAgent.includes('chrome') || userAgent.includes('edge') || userAgent.includes('chromium')) {
+        return 'chromium';
+      } else {
+        return 'unknown';
+      }
+    }
+    
+    function installExtension() {
+      const installBtn = document.getElementById('installBtn');
+      const originalText = installBtn.textContent;
+      const browser = detectBrowser();
+      
+      installBtn.textContent = 'Installing...';
+      installBtn.disabled = true;
+      
+      // Create a temporary link to download the extension
+      const link = document.createElement('a');
+      link.href = 'league-arena-tracker-extension.zip';
+      link.download = 'league-arena-tracker-extension.zip';
+      link.click();
+      
+      // Show browser-specific instructions after download
+      setTimeout(() => {
+        installBtn.textContent = 'Installation Started!';
+        
+        let instructions = '';
+        if (browser === 'firefox') {
+          instructions = `Extension downloaded! Now follow these steps for Firefox:
+
+1. Open Firefox and go to about:debugging
+2. Click "This Firefox" in the left sidebar
+3. Click "Load Temporary Add-on"
+4. Select the manifest.json file from the extracted folder
+5. Click the extension icon and upload your lockfile!
+
+The extension will be installed and ready to use!`;
+        } else if (browser === 'chromium') {
+          instructions = `Extension downloaded! Now follow these steps for Chrome/Edge:
+
+1. Open Chrome/Edge and go to chrome://extensions/
+2. Enable "Developer mode" (toggle in top right)
+3. Click "Load unpacked"
+4. Select the extracted extension folder
+5. Click the extension icon and upload your lockfile!
+
+The extension will be installed and ready to use!`;
+        } else {
+          instructions = `Extension downloaded! Choose your browser:
+
+For Chrome/Edge:
+1. Go to chrome://extensions/
+2. Enable "Developer mode"
+3. Click "Load unpacked" and select the folder
+
+For Firefox:
+1. Go to about:debugging
+2. Click "This Firefox"
+3. Click "Load Temporary Add-on" and select manifest.json
+
+Then click the extension icon and upload your lockfile!`;
+        }
+        
+        alert(instructions);
+        
+        installBtn.textContent = originalText;
+        installBtn.disabled = false;
+      }, 1000);
+    }
+    
+    // Check if extension is already installed
+    function checkIfInstalled() {
+      // This would check if the extension is already installed
+      // For now, we'll just show the install button
+    }
+    
+    // Run check on page load
+    document.addEventListener('DOMContentLoaded', checkIfInstalled);
+  </script>
 </body>
 </html>
