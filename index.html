@@ -340,8 +340,10 @@
     }
 
     async function lcuRequest({ method = 'GET', path = '/', port, password, isBinary = false }) {
-      // Use HTTP instead of HTTPS for localhost to avoid CORS issues
-      const url = `http://127.0.0.1:${port}${path}`;
+      // Use a CORS proxy to access localhost from HTTPS sites
+      const proxyUrl = 'https://api.allorigins.win/raw?url=';
+      const targetUrl = `http://127.0.0.1:${port}${path}`;
+      const url = proxyUrl + encodeURIComponent(targetUrl);
       
       const options = {
         method,
@@ -457,7 +459,7 @@
                   }
                   
                   const imageUrl = championData && championData.squarePortraitPath 
-                    ? `http://127.0.0.1:${lockfileData.port}${championData.squarePortraitPath}`
+                    ? `https://api.allorigins.win/raw?url=${encodeURIComponent(`http://127.0.0.1:${lockfileData.port}${championData.squarePortraitPath}`)}`
                     : null;
                   
                   return `
