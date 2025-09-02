@@ -7380,3 +7380,38 @@ This is exactly what you wanted - a simple static website where people can downl
 
 ---
 
+_**User**_
+
+Run node package-extension.js
+node:internal/modules/cjs/loader:1143
+  throw err;
+  ^
+
+Error: Cannot find module '/home/runner/work/leaguePickerWeb/leaguePickerWeb/package-extension.js'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+    at Module._load (node:internal/modules/cjs/loader:981:27)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12)
+    at node:internal/main/run_main_module:28:49 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v18.20.8
+
+---
+
+_**Assistant**_
+
+I see the issue! The GitHub Actions workflow is trying to run `package-extension.js` but I deleted that file since we already created the ZIP manually. Let me fix the workflow to remove the unnecessary steps:
+
+
+---
+
+
+
+---
+
+
+
+---
+
