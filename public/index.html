@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>League LCU Demo</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 2rem; background: #0b0f19; color: #e6eaf2; }
+    header { margin-bottom: 1.5rem; }
+    h1 { font-size: 1.6rem; margin: 0 0 0.5rem; }
+    .card { background: #121827; padding: 1rem; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); margin-bottom: 1rem; }
+    button { background: #3b82f6; color: white; border: 0; border-radius: 8px; padding: 0.6rem 1rem; cursor: pointer; font-weight: 600; }
+    button:hover { background: #2563eb; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #0f172a; padding: 0.75rem; border-radius: 8px; }
+    .row { display: flex; gap: 1rem; }
+    .row .card { flex: 1; }
+    a { color: #93c5fd; }
+    
+    /* Arena Challenge specific styles */
+    .arena-challenge h3 { color: #fbbf24; margin: 0 0 0.5rem; }
+    .description { color: #d1d5db; margin-bottom: 1rem; }
+    .progress-section { margin: 1rem 0; }
+    .level-badge { 
+      display: inline-block; 
+      padding: 0.25rem 0.5rem; 
+      border-radius: 4px; 
+      font-weight: bold; 
+      margin-bottom: 0.5rem;
+      background: #6b7280;
+    }
+    .level-badge.iron { background: #9ca3af; color: #1f2937; }
+    .level-badge.bronze { background: #d97706; color: white; }
+    .level-badge.silver { background: #6b7280; color: white; }
+    .level-badge.gold { background: #f59e0b; color: #1f2937; }
+    .level-badge.platinum { background: #8b5cf6; color: white; }
+    .level-badge.diamond { background: #06b6d4; color: white; }
+    .level-badge.master { background: #dc2626; color: white; }
+    .progress-bar { 
+      background: #374151; 
+      height: 8px; 
+      border-radius: 4px; 
+      overflow: hidden; 
+      margin: 0.5rem 0;
+    }
+    .progress-fill { 
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6); 
+      height: 100%; 
+      transition: width 0.3s ease;
+    }
+    .progress-text { font-size: 0.875rem; color: #9ca3af; }
+    .champions-completed { margin: 1rem 0; }
+    .champions-completed h4 { margin: 0 0 0.5rem; color: #e5e7eb; }
+    .champion-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 
+      gap: 0.75rem; 
+      margin-top: 0.5rem;
+    }
+    .champion-card { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      background: #1f2937; 
+      border-radius: 8px; 
+      padding: 0.5rem; 
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    .champion-card:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .champion-image { 
+      width: 48px; 
+      height: 48px; 
+      border-radius: 50%; 
+      object-fit: cover;
+      border: 2px solid #374151;
+    }
+    .champion-fallback { 
+      width: 48px; 
+      height: 48px; 
+      border-radius: 50%; 
+      background: #374151; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 0.6rem; 
+      color: #9ca3af;
+      text-align: center;
+      border: 2px solid #4b5563;
+    }
+    .champion-name { 
+      font-size: 0.7rem; 
+      color: #d1d5db; 
+      margin-top: 0.25rem; 
+      text-align: center;
+      font-weight: 500;
+    }
+    .raw-data { margin-top: 1rem; }
+    .raw-data summary { cursor: pointer; color: #9ca3af; }
+    .loading, .error { padding: 1rem; text-align: center; }
+    .error { color: #ef4444; }
+  </style>
+  <script>
+    async function fetchJson(path) {
+      const res = await fetch(path);
+      const text = await res.text();
+      try { return JSON.parse(text); } catch { return text; }
+    }
+
+    async function loadSummoner() {
+      const out = document.getElementById('summonerOut');
+      out.textContent = 'Loading...';
+      const data = await fetchJson('/api/summoner');
+      out.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+    }
+
+    async function loadChallenges() {
+      const out = document.getElementById('challengesOut');
+      out.textContent = 'Loading...';
+      const data = await fetchJson('/api/challenges');
+      out.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+    }
+
+    async function loadArenaChallenge() {
+      const out = document.getElementById('arenaChallengeOut');
+      out.innerHTML = '<div class="loading">Loading Arena Champion challenge...</div>';
+      
+      try {
+        const [challengeData, championsData] = await Promise.all([
+          fetchJson('/api/arena-challenge'),
+          fetchJson('/api/champions')
+        ]);
+        
+        if (challengeData.error) {
+          let errorMsg = `Error: ${challengeData.error}`;
+          if (challengeData.debug) {
+            errorMsg += `<br><br>Debug info:<br>`;
+            errorMsg += `Has challenges: ${challengeData.debug.hasChallenges}<br>`;
+            errorMsg += `Challenge keys: ${challengeData.debug.challengeKeys}<br>`;
+            errorMsg += `Body keys: ${challengeData.debug.bodyKeys}<br>`;
+            errorMsg += `Is array: ${challengeData.debug.isArray}`;
+          }
+          out.innerHTML = `<div class="error">${errorMsg}</div>`;
+          return;
+        }
+
+        // Format the Arena Champion challenge data nicely
+        const challenge = challengeData;
+        const progressPercent = Math.round((challenge.currentValue / challenge.currentThreshold) * 100);
+        
+        // Create champion ID to name mapping
+        const championMap = {};
+        console.log('Champions data received:', championsData);
+        
+        if (championsData && typeof championsData === 'object' && !championsData.error) {
+          // Handle both owned-champions-minimal and full champions data structures
+          Object.entries(championsData).forEach(([championId, championData]) => {
+            if (championData && championData.name) {
+              // For owned champions: championId is the key, championData has name
+              // For full champions: championId might be the key, championData has name and id
+              const id = championData.id || parseInt(championId);
+              championMap[id] = championData.name;
+            }
+          });
+        }
+        
+        console.log('Champion map created:', Object.keys(championMap).length, 'champions');
+        console.log('Sample champion mapping:', Object.entries(championMap).slice(0, 5));
+        
+        out.innerHTML = `
+          <div class="arena-challenge">
+            <h3>🏆 ${challenge.capstoneGroupName}</h3>
+            <p class="description">${challenge.description}</p>
+            
+            <div class="progress-section">
+              <div class="level-badge ${challenge.currentLevel.toLowerCase()}">${challenge.currentLevel}</div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progressPercent}%"></div>
+              </div>
+              <div class="progress-text">${challenge.currentValue} / ${challenge.currentThreshold} champions</div>
+            </div>
+            
+            <div class="champions-completed">
+              <h4>Champions Completed (${challenge.completedIds.length}):</h4>
+              <div class="champion-grid">
+                ${challenge.completedIds.map(id => {
+                  const name = championMap[id] || `ID: ${id}`;
+                  // Find champion data by ID - try direct lookup first, then search by ID
+                  let championData = null;
+                  if (championsData && championsData[id]) {
+                    championData = championsData[id];
+                  } else if (championsData) {
+                    // Search through all champions to find by ID
+                    championData = Object.values(championsData).find(champ => champ && champ.id === id);
+                  }
+                  const imageUrl = championData && championData.squarePortraitPath 
+                    ? `/api/champion-image${championData.squarePortraitPath}`
+                    : null;
+                  
+                  // Debug logging for champions without data
+                  if (!championData) {
+                    console.log(`Champion ${id} (${name}): No champion data found - may not exist in champions API`);
+                  } else {
+                    console.log(`Champion ${id} (${name}): Found data with squarePortraitPath: ${championData.squarePortraitPath}`);
+                  }
+                  
+                  return `
+                    <div class="champion-card" title="${name} (ID: ${id})">
+                      ${imageUrl ? 
+                        `<img src="${imageUrl}" alt="${name}" class="champion-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` :
+                        `<div class="champion-fallback">${name}</div>`
+                      }
+                      <div class="champion-fallback" style="display: none;">${name}</div>
+                      <div class="champion-name">${name}</div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+            
+            <details class="raw-data">
+              <summary>Raw Data</summary>
+              <pre>${JSON.stringify(challenge, null, 2)}</pre>
+            </details>
+          </div>
+        `;
+      } catch (err) {
+        out.innerHTML = `<div class="error">Failed to load: ${err.message}</div>`;
+      }
+    }
+  </script>
+  </head>
+  <body>
+    <header>
+      <h1>League Client (LCU) Info</h1>
+      <p>This page reads the lockfile from the default League folder to securely query local LCU endpoints. Ensure the client is running.</p>
+    </header>
+    <div class="row">
+      <div class="card">
+        <h2>Current Summoner</h2>
+        <p><button onclick="loadSummoner()">Load Summoner</button></p>
+        <pre id="summonerOut">Click to load</pre>
+      </div>
+      <!-- <div class="card">
+        <h2>All Challenges</h2>
+        <p><button onclick="loadChallenges()">Load All Challenges</button></p>
+        <pre id="challengesOut">Click to load</pre>
+      </div> -->
+    </div>
+    
+    <div class="card">
+      <h2>🏆 Arena Champion Challenge</h2>
+      <p><button onclick="loadArenaChallenge()">Load Arena Champion Progress</button></p>
+      <div id="arenaChallengeOut">Click to load your Arena Champion challenge progress</div>
+    </div>
+    <footer class="card">
+      <p>If you see "Lockfile not found", start the League client. Default paths searched are common Windows install paths.</p>
+    </footer>
+  </body>
+  </html>
+
+

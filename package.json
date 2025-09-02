@@ -1,0 +1,24 @@
+{
+  "name": "league-picker-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Single-page app to read League Client (LCU) info via lockfile and display summoner and challenges.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {},
+  "keywords": [
+    "league",
+    "lcu",
+    "lockfile",
+    "summoner",
+    "challenges"
+  ]
+}
+
+
